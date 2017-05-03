@@ -1,5 +1,6 @@
 (module
-    (func $draw_circle (import "imports" "draw_circle") (param f32 f32 f32))
+    (func $draw_player (import "imports" "draw_player") (param f32 f32))
+    (func $draw_shot (import "imports" "draw_shot") (param f32 f32))
     (memory (export "ram") 1)
 
     (global $player_x (mut f32) (f32.const 100))
@@ -11,12 +12,12 @@
     (func $update (export "update")
         (call $move_player)
 
-        (call $draw_circle (get_global $player_x) (get_global $player_y) (f32.const 30))
+        (call $draw_player (get_global $player_x) (get_global $player_y))
 
         (call $shot_update)
         (if (i32.eq (get_global $is_shot_alive) (i32.const 1))
             (then
-                (call $draw_circle (get_global $shot_x) (get_global $shot_y) (f32.const 15))
+                (call $draw_shot (get_global $shot_x) (get_global $shot_y))
             )
         )
     )
