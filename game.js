@@ -42,7 +42,7 @@ document.body.onload = function() {
 }
 
 function update(instance) {
-    context.clearRect(0, 0, 300, 300);
+    context.clearRect(0, 0, 640, 640);
     instance.exports.update();
     requestAnimationFrame(() => update(instance));
 }

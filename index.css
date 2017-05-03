@@ -1,0 +1,14 @@
+body {
+    text-align: center;
+    background: rgb(200, 200, 200)
+}
+
+canvas#screen {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vmin;
+    height: 80vmin;
+    background: black;
+}

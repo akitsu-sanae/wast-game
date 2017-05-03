@@ -15,25 +15,25 @@
 
         (if (i32.load8_u (i32.const 293)) ;; left key pressed
             (then
-               (set_global $player_x (f32.sub (get_global $player_x) (f32.const 2)))
+               (set_global $player_x (f32.sub (get_global $player_x) (f32.const 5)))
             )
         )
 
         (if (i32.load8_u (i32.const 295)) ;; right key pressed
             (then
-               (set_global $player_x (f32.add (get_global $player_x) (f32.const 2)))
+               (set_global $player_x (f32.add (get_global $player_x) (f32.const 5)))
             )
         )
 
         (if (i32.load8_u (i32.const 294)) ;; up key pressed
             (then
-               (set_global $player_y (f32.sub (get_global $player_y) (f32.const 2)))
+               (set_global $player_y (f32.sub (get_global $player_y) (f32.const 5)))
             )
         )
 
         (if (i32.load8_u (i32.const 296)) ;; down key pressed
             (then
-               (set_global $player_y (f32.add (get_global $player_y) (f32.const 2)))
+               (set_global $player_y (f32.add (get_global $player_y) (f32.const 5)))
             )
         )
     )
