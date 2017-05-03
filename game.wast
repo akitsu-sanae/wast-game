@@ -36,6 +36,30 @@
                (set_global $player_y (f32.add (get_global $player_y) (f32.const 5)))
             )
         )
+
+        (if (f32.le (get_global $player_x) (f32.const 0))
+            (then
+                (set_global $player_x (f32.const 0))
+            )
+        )
+
+        (if (f32.gt (get_global $player_x) (f32.const 640))
+            (then
+                (set_global $player_x (f32.const 640))
+            )
+        )
+
+        (if (f32.le (get_global $player_y) (f32.const 0))
+            (then
+                (set_global $player_y (f32.const 0))
+            )
+        )
+
+        (if (f32.gt (get_global $player_y) (f32.const 640))
+            (then
+                (set_global $player_y (f32.const 640))
+            )
+        )
     )
 )
 
