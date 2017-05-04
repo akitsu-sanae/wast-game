@@ -2,6 +2,7 @@
     (func $draw_player (import "imports" "draw_player") (param f32 f32))
     (func $draw_shot (import "imports" "draw_shot") (param f32 f32))
     (func $draw_enemy (import "imports" "draw_enemy") (param f32 f32))
+    (func $draw_enemy_hp (import "imports" "draw_enemy_hp") (param i32))
     (func $draw_gameclear_scene (import "imports" "draw_gameclear_scene"))
     (func $console (import "imports" "console") (param i32))
     (func $console_f (import "imports" "console") (param f32))
@@ -18,7 +19,7 @@
     (global $enemy_y (mut f32) (f32.const 120))
     (global $enemy_counter (mut f32) (f32.const 0))
 
-    (global $enemy_hp (mut i32) (i32.const 100))
+    (global $enemy_hp (mut i32) (i32.const 500))
 
     (global $pi f32 (f32.const 3.141592))
 
@@ -39,6 +40,7 @@
 
         (call $enemy_update)
         (call $draw_enemy (get_global $enemy_x) (get_global $enemy_y))
+        (call $draw_enemy_hp (get_global $enemy_hp))
     )
 
     (func $move_player
