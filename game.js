@@ -29,6 +29,12 @@ function draw_enemy(x, y) {
     context.fill();
 }
 
+function draw_gameclear_scene() {
+    context.font = "48pt Arial";
+    context.fillStyle = "rgba(200, 200, 200, 200)";
+    context.fillText("Game Clear", 120, 120, 640);
+}
+
 document.body.onload = function() {
     fetch("./game.wasm")
         .then(res => res.arrayBuffer())
@@ -38,6 +44,7 @@ document.body.onload = function() {
                     draw_player: (x, y) => draw_player(x, y),
                     draw_shot: (x, y) => draw_shot(x, y),
                     draw_enemy: (x, y) => draw_enemy(x, y),
+                    draw_gameclear_scene: () => draw_gameclear_scene(),
                     sin: (angle) => Math.sin(angle),
                     cos: (angle) => Math.cos(angle),
                     console: (i) => console.log(i)

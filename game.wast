@@ -2,6 +2,7 @@
     (func $draw_player (import "imports" "draw_player") (param f32 f32))
     (func $draw_shot (import "imports" "draw_shot") (param f32 f32))
     (func $draw_enemy (import "imports" "draw_enemy") (param f32 f32))
+    (func $draw_gameclear_scene (import "imports" "draw_gameclear_scene"))
     (func $console (import "imports" "console") (param i32))
     (func $console_f (import "imports" "console") (param f32))
     (func $sin (import "imports" "sin") (param f32) (result f32))
@@ -17,9 +18,18 @@
     (global $enemy_y (mut f32) (f32.const 120))
     (global $enemy_counter (mut f32) (f32.const 0))
 
+    (global $enemy_hp (mut i32) (i32.const 100))
+
     (global $pi f32 (f32.const 3.141592))
 
     (func $update (export "update")
+        (if (i32.eq (get_global $enemy_hp) (i32.const 0))
+            (then
+                (call $draw_gameclear_scene)
+                (return)
+            ))
+
+
         (call $move_player)
 
         (call $draw_player (get_global $player_x) (get_global $player_y))
@@ -111,6 +121,18 @@
 
                 (set_local $x (f32.add (get_local $x) (f32.load (i32.add (get_local $data_addr) (i32.const 9)))))
                 (set_local $y (f32.add (get_local $y) (f32.load (i32.add (get_local $data_addr) (i32.const 13)))))
+
+                 ;; if abs(enemy_x - shot_x)  < 32 && abs(enemy_y - shot_y) < 32 then enemy_hp = enemy_hp - 1
+                 (if
+                     (i32.and
+                         (f32.lt
+                             (f32.abs (f32.sub (get_global $enemy_x) (get_local $x)))
+                             (f32.const 32))
+                         (f32.lt
+                             (f32.abs (f32.sub (get_global $enemy_y) (get_local $y)))
+                             (f32.const 32)))
+                     (then
+                         (set_global $enemy_hp (i32.sub (get_global $enemy_hp) (i32.const 1)))))
 
                 (if (f32.lt (get_local $y) (f32.const 0))
                     (then
