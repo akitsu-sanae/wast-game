@@ -22,6 +22,13 @@ function draw_shot(x, y) {
     context.fill();
 }
 
+function draw_enemy(x, y) {
+    context.fillStyle = "rgba(250, 150, 150, 200)";
+    context.beginPath();
+    context.arc(x, y, 40, 0, Math.PI * 2.0, false);
+    context.fill();
+}
+
 document.body.onload = function() {
     fetch("./game.wasm")
         .then(res => res.arrayBuffer())
@@ -30,6 +37,9 @@ document.body.onload = function() {
                 imports: {
                     draw_player: (x, y) => draw_player(x, y),
                     draw_shot: (x, y) => draw_shot(x, y),
+                    draw_enemy: (x, y) => draw_enemy(x, y),
+                    sin: (angle) => Math.sin(angle),
+                    cos: (angle) => Math.cos(angle)
                 }
             }
         ))
