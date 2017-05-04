@@ -50,32 +50,32 @@ document.body.onload = function() {
             context.globalAlpha = 0.7;
             context.globalCompositeOperation = "screen";
 
-            new WebAssembly.Memory({initial: 905});
+            new WebAssembly.Memory({initial: 1025});
             ram = new Uint8Array(instance.exports.ram.buffer);
 
             /*
-             * ram[300 + 0] ... left key
-             * ram[300 + 1] ... up key
-             * ram[300 + 2] ... right key
-             * ram[300 + 3] ... down key
-             * ram[300 + 4] ... z key
+             * ram[1020 + 0] ... left key
+             * ram[1020 + 1] ... up key
+             * ram[1020 + 2] ... right key
+             * ram[1020 + 3] ... down key
+             * ram[1020 + 4] ... z key
              */
             document.onkeydown = e => {
                 switch (e.keyCode) {
                 case 37: // left
-                    ram[900 + 0] = 1;
+                    ram[1020 + 0] = 1;
                     break;
                 case 38: // up
-                    ram[900 + 1] = 1;
+                    ram[1020 + 1] = 1;
                     break;
                 case 39: // right
-                    ram[900 + 2] = 1;
+                    ram[1020 + 2] = 1;
                     break;
                 case 40: // down
-                    ram[900 + 3] = 1;
+                    ram[1020 + 3] = 1;
                     break;
                 case 90: // z
-                    ram[900 + 4] = 1;
+                    ram[1020 + 4] = 1;
                     break;
                 }
             };
@@ -83,19 +83,19 @@ document.body.onload = function() {
             document.onkeyup = e => {
                 switch (e.keyCode) {
                 case 37: // left
-                    ram[900] = 0;
+                    ram[1020] = 0;
                     break;
                 case 38: // up
-                    ram[900 + 1] = 0;
+                    ram[1020 + 1] = 0;
                     break;
                 case 39: // right
-                    ram[900 + 2] = 0;
+                    ram[1020 + 2] = 0;
                     break;
                 case 40: // down
-                    ram[900 + 3] = 0;
+                    ram[1020 + 3] = 0;
                     break;
                 case 90: // z
-                    ram[900 + 4] = 0;
+                    ram[1020 + 4] = 0;
                     break;
                 }
             };
@@ -106,7 +106,7 @@ document.body.onload = function() {
 function update(instance) {
     context.clearRect(0, 0, 640, 640);
     instance.exports.update();
-    ram[904] = 0; // z key
+    ram[1024] = 0; // z key
     requestAnimationFrame(() => update(instance));
 }
 
