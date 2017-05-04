@@ -15,6 +15,12 @@ function draw_player(x, y) {
     context.fillRect(x+22.5, y-30, 15, 80);
 }
 
+function draw_player_hp(hp) {
+    context.font = "32px Arial";
+    context.fillStyle = "rgba(100, 100, 2000, 200)";
+    context.fillText("LIFE: " + hp, 10, 600, 640);
+}
+
 function draw_shot(x, y) {
     context.fillStyle = "rgba(100, 120, 200, 200)";
     context.beginPath();
@@ -54,6 +60,7 @@ document.body.onload = function() {
             buffer, {
                 imports: {
                     draw_player: (x, y) => draw_player(x, y),
+                    draw_player_hp: (hp) => draw_player_hp(hp),
                     draw_shot: (x, y) => draw_shot(x, y),
                     draw_enemy: (x, y) => draw_enemy(x, y),
                     draw_bullet: (x, y) => draw_bullet(x, y),

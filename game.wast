@@ -1,5 +1,6 @@
 (module
     (func $draw_player (import "imports" "draw_player") (param f32 f32))
+    (func $draw_player_hp (import "imports" "draw_player_hp") (param i32))
     (func $draw_shot (import "imports" "draw_shot") (param f32 f32))
     (func $draw_enemy (import "imports" "draw_enemy") (param f32 f32))
     (func $draw_bullet (import "imports" "draw_bullet") (param f32 f32))
@@ -13,6 +14,7 @@
 
     (global $player_x (mut f32) (f32.const 320))
     (global $player_y (mut f32) (f32.const 320))
+    (global $player_hp (mut i32) (i32.const 5))
 
     (global $shot_index (mut i32) (i32.const 0))
     (global $bullet_index (mut i32) (i32.const 0))
@@ -96,6 +98,7 @@
         )
 
         (call $draw_player (get_global $player_x) (get_global $player_y))
+        (call $draw_player_hp (get_global $player_hp))
     )
 
     (func $update_shots
@@ -236,7 +239,9 @@
                              (f32.const 8)))
                      (then
                          (call $console (i32.const 42))
-                         (set_global $enemy_hp (i32.sub (get_global $enemy_hp) (i32.const 1)))))
+                         (i32.store8 (get_local $data_addr) (i32.const 0))
+                         (set_global $player_hp (i32.sub (get_global $player_hp) (i32.const 1)))
+                         (br $update)))
 
                 (if (f32.gt (get_local $y) (f32.const 640))
                     (then
