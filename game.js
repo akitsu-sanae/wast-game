@@ -39,7 +39,8 @@ document.body.onload = function() {
                     draw_shot: (x, y) => draw_shot(x, y),
                     draw_enemy: (x, y) => draw_enemy(x, y),
                     sin: (angle) => Math.sin(angle),
-                    cos: (angle) => Math.cos(angle)
+                    cos: (angle) => Math.cos(angle),
+                    console: (i) => console.log(i)
                 }
             }
         ))
