@@ -141,7 +141,9 @@
                              (f32.abs (f32.sub (get_global $enemy_y) (get_local $y)))
                              (f32.const 32)))
                      (then
-                         (set_global $enemy_hp (i32.sub (get_global $enemy_hp) (i32.const 1)))))
+                         (set_global $enemy_hp (i32.sub (get_global $enemy_hp) (i32.const 1)))
+                         (i32.store8 (get_local $data_addr) (i32.const 0))
+                         (br $update)))
 
                 (if (f32.lt (get_local $y) (f32.const 0))
                     (then
