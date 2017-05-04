@@ -35,10 +35,8 @@
 
         (call $move_player)
 
-        (call $draw_player (get_global $player_x) (get_global $player_y))
 
         (call $update_shots)
-        (call $draw_shots)
 
         (call $update_bullets)
 
@@ -96,6 +94,8 @@
                 (set_global $player_y (f32.const 640))
             )
         )
+
+        (call $draw_player (get_global $player_x) (get_global $player_y))
     )
 
     (func $update_shots
@@ -153,6 +153,11 @@
                         (f32.load (i32.add (get_local $data_addr) (i32.const 9)))
                         (f32.const 0.9)))
 
+                (call $draw_shot
+                    (f32.load (i32.add (get_local $data_addr) (i32.const 1)))
+                    (f32.load (i32.add (get_local $data_addr) (i32.const 5))))
+
+
                 (br $update)
             )
         )
@@ -186,36 +191,6 @@
                     (get_global $shot_index)
                     (i32.const 1))
                 (i32.const 30)))
-    )
-
-    (func $draw_shots
-        (local $shot_i i32)
-        (local $data_addr i32)
-        (set_local $shot_i (i32.const 0))
-        (block $update_break
-            (loop $update
-                (br_if $update_break (i32.eq (get_local $shot_i) (i32.const 30)))
-                ;; 17 * shot_i
-                (set_local $data_addr
-                    (i32.mul
-                        (i32.const 17)
-                        (get_local $shot_i)))
-
-                (set_local $shot_i (i32.add (get_local $shot_i) (i32.const 1)))
-
-                ;; continue if is_alive == 0
-                (br_if $update
-                    (i32.eq
-                        (i32.load8_s (get_local $data_addr))
-                        (i32.const 0)))
-
-                (call $draw_shot
-                    (f32.load (i32.add (get_local $data_addr) (i32.const 1)))
-                    (f32.load (i32.add (get_local $data_addr) (i32.const 5))))
-
-                (br $update)
-            )
-        )
     )
 
     (func $update_bullets
