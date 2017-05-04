@@ -114,13 +114,13 @@
     (func $enemy_update
         (local $angle f32)
         (set_global $enemy_counter (f32.add (get_global $enemy_counter) (f32.const 1)))
-        (if (f32.gt (get_global $enemy_counter) (f32.const 360))
+        (if (f32.gt (get_global $enemy_counter) (f32.const 120))
             (then
-                (set_global $enemy_counter (f32.sub (get_global $enemy_counter) (f32.const 360)))
+                (set_global $enemy_counter (f32.sub (get_global $enemy_counter) (f32.const 120)))
             )
         )
 
-        ;; angle = 2 * PI * counter / 360
+        ;; angle = 2 * PI * counter / 120
         (set_local $angle
             (f32.div
                 (f32.mul
@@ -128,7 +128,7 @@
                     (f32.mul
                         (get_global $pi)
                         (get_global $enemy_counter)))
-                (f32.const 360)))
+                (f32.const 120)))
 
         ;; enemy_x = 320 + 80 * cos(angle)
         (set_global $enemy_x
@@ -141,7 +141,7 @@
         ;; enemy_y = 120 + 80 * sin(angle)
         (set_global $enemy_y
             (f32.add
-                (f32.const 320)
+                (f32.const 120)
                 (f32.mul
                     (f32.const 80)
                     (call $sin (get_local $angle)))))
