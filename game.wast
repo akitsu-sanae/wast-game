@@ -6,6 +6,7 @@
     (func $draw_bullet (import "imports" "draw_bullet") (param f32 f32))
     (func $draw_enemy_hp (import "imports" "draw_enemy_hp") (param i32))
     (func $draw_gameclear_scene (import "imports" "draw_gameclear_scene"))
+    (func $draw_gameover_scene (import "imports" "draw_gameover_scene"))
     (func $console (import "imports" "console") (param i32))
     (func $console_f (import "imports" "console") (param f32))
     (func $sin (import "imports" "sin") (param f32) (result f32))
@@ -31,12 +32,14 @@
         (if (i32.eq (get_global $enemy_hp) (i32.const 0))
             (then
                 (call $draw_gameclear_scene)
-                (return)
-            ))
+                (return)))
 
+        (if (i32.eq (get_global $player_hp) (i32.const -1))
+            (then
+                (call $draw_gameover_scene)
+                (return)))
 
         (call $move_player)
-
 
         (call $update_shots)
 

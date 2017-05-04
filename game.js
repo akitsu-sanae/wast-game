@@ -53,6 +53,12 @@ function draw_gameclear_scene() {
     context.fillText("Game Clear", 120, 120, 640);
 }
 
+function draw_gameover_scene() {
+    context.font = "48pt Arial";
+    context.fillStyle = "rgba(200, 200, 200, 200)";
+    context.fillText("Game Over", 120, 120, 640);
+}
+
 document.body.onload = function() {
     fetch("./game.wasm")
         .then(res => res.arrayBuffer())
@@ -66,6 +72,7 @@ document.body.onload = function() {
                     draw_bullet: (x, y) => draw_bullet(x, y),
                     draw_enemy_hp: (hp) => draw_enemy_hp(hp),
                     draw_gameclear_scene: () => draw_gameclear_scene(),
+                    draw_gameover_scene: () => draw_gameover_scene(),
                     sin: (angle) => Math.sin(angle),
                     cos: (angle) => Math.cos(angle),
                     console: (i) => console.log(i)
