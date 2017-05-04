@@ -37,25 +37,25 @@
 
     (func $move_player
 
-        (if (i32.load8_u (i32.const 293)) ;; left key pressed
+        (if (i32.load8_u (i32.const 900)) ;; left key pressed
             (then
                (set_global $player_x (f32.sub (get_global $player_x) (f32.const 5)))
             )
         )
 
-        (if (i32.load8_u (i32.const 295)) ;; right key pressed
+        (if (i32.load8_u (i32.const 902)) ;; right key pressed
             (then
                (set_global $player_x (f32.add (get_global $player_x) (f32.const 5)))
             )
         )
 
-        (if (i32.load8_u (i32.const 294)) ;; up key pressed
+        (if (i32.load8_u (i32.const 901)) ;; up key pressed
             (then
                (set_global $player_y (f32.sub (get_global $player_y) (f32.const 5)))
             )
         )
 
-        (if (i32.load8_u (i32.const 296)) ;; down key pressed
+        (if (i32.load8_u (i32.const 903)) ;; down key pressed
             (then
                (set_global $player_y (f32.add (get_global $player_y) (f32.const 5)))
             )
@@ -90,7 +90,7 @@
     (func $shot_update
         (if
             (i32.and
-                (i32.load8_u (i32.const 346))
+                (i32.load8_u (i32.const 904))
                 (i32.eq (get_global $is_shot_alive) (i32.const 0)))
             (then
                 (set_global $is_shot_alive (i32.const 1))
