@@ -106,6 +106,7 @@ document.body.onload = function() {
 function update(instance) {
     context.clearRect(0, 0, 640, 640);
     instance.exports.update();
+    ram[904] = 0; // z key
     requestAnimationFrame(() => update(instance));
 }
 
