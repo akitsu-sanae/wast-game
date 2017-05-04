@@ -33,25 +33,25 @@
 
     (func $move_player
 
-        (if (i32.load8_u (i32.const 1020)) ;; left key pressed
+        (if (i32.load8_u (i32.const 1190)) ;; left key pressed
             (then
                (set_global $player_x (f32.sub (get_global $player_x) (f32.const 5)))
             )
         )
 
-        (if (i32.load8_u (i32.const 1022)) ;; right key pressed
+        (if (i32.load8_u (i32.const 1192)) ;; right key pressed
             (then
                (set_global $player_x (f32.add (get_global $player_x) (f32.const 5)))
             )
         )
 
-        (if (i32.load8_u (i32.const 1021)) ;; up key pressed
+        (if (i32.load8_u (i32.const 1191)) ;; up key pressed
             (then
                (set_global $player_y (f32.sub (get_global $player_y) (f32.const 5)))
             )
         )
 
-        (if (i32.load8_u (i32.const 1023)) ;; down key pressed
+        (if (i32.load8_u (i32.const 1193)) ;; down key pressed
             (then
                (set_global $player_y (f32.add (get_global $player_y) (f32.const 5)))
             )
@@ -85,12 +85,13 @@
     (func $update_shots
         (local $shot_i i32)
         (local $data_addr i32)
+        (local $x f32)
         (local $y f32)
 
         (set_local $shot_i (i32.const 0))
         (block $update_break
             (loop $update
-                (br_if $update_break (i32.eq (get_local $shot_i) (i32.const 20)))
+                (br_if $update_break (i32.eq (get_local $shot_i) (i32.const 30)))
                 ;; 17 * shot_i
                 (set_local $data_addr
                     (i32.mul
@@ -105,9 +106,11 @@
                         (i32.load8_u (get_local $data_addr))
                         (i32.const 0)))
 
+                (set_local $x (f32.load (i32.add (get_local $data_addr) (i32.const 1))))
                 (set_local $y (f32.load (i32.add (get_local $data_addr) (i32.const 5))))
 
-                (set_local $y (f32.sub (get_local $y) (f32.const 4)))
+                (set_local $x (f32.add (get_local $x) (f32.load (i32.add (get_local $data_addr) (i32.const 9)))))
+                (set_local $y (f32.add (get_local $y) (f32.load (i32.add (get_local $data_addr) (i32.const 13)))))
 
                 (if (f32.lt (get_local $y) (f32.const 0))
                     (then
@@ -115,23 +118,29 @@
                     )
                 )
 
-
+                (f32.store (i32.add (get_local $data_addr) (i32.const 1)) (get_local $x))
                 (f32.store (i32.add (get_local $data_addr) (i32.const 5)) (get_local $y))
+                (f32.store (i32.add (get_local $data_addr) (i32.const 9))
+                    (f32.mul
+                        (f32.load (i32.add (get_local $data_addr) (i32.const 9)))
+                        (f32.const 0.9)))
 
                 (br $update)
             )
         )
 
-        (if (i32.load8_u (i32.const 1024))
+        (if (i32.load8_u (i32.const 1194))
             (then
-                (call $fire_shot)
+                (call $fire_shot (f32.const -5.0) (f32.const -5.0))
+                (call $fire_shot (f32.const 0) (f32.const -5.5))
+                (call $fire_shot (f32.const 5.0) (f32.const -5.0))
             )
         )
     )
 
-    (func $fire_shot
+    (func $fire_shot (param $dx f32) (param $dy f32)
         (local $new_shot_addr i32)
-        ;; addr = 180 + 9 * $shot_index
+        ;; addr = 17 * $shot_index
         (set_local $new_shot_addr
             (i32.mul
                 (i32.const 17)
@@ -140,13 +149,15 @@
         (i32.store8 (get_local $new_shot_addr) (i32.const 1))
         (f32.store (i32.add (get_local $new_shot_addr) (i32.const 1)) (get_global $player_x))
         (f32.store (i32.add (get_local $new_shot_addr) (i32.const 5)) (get_global $player_y))
+        (f32.store (i32.add (get_local $new_shot_addr) (i32.const 9)) (get_local $dx))
+        (f32.store (i32.add (get_local $new_shot_addr) (i32.const 13)) (get_local $dy))
 
         (set_global $shot_index
             (i32.rem_s
                 (i32.add
                     (get_global $shot_index)
                     (i32.const 1))
-                (i32.const 20)))
+                (i32.const 30)))
     )
 
     (func $draw_shots
@@ -155,7 +166,7 @@
         (set_local $shot_i (i32.const 0))
         (block $update_break
             (loop $update
-                (br_if $update_break (i32.eq (get_local $shot_i) (i32.const 20)))
+                (br_if $update_break (i32.eq (get_local $shot_i) (i32.const 30)))
                 ;; 17 * shot_i
                 (set_local $data_addr
                     (i32.mul
