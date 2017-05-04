@@ -29,6 +29,13 @@ function draw_enemy(x, y) {
     context.fill();
 }
 
+function draw_bullet(x, y) {
+    context.fillStyle = "rgba(200, 200, 120, 200)";
+    context.beginPath();
+    context.arc(x, y, 10.0, 0, Math.PI * 2.0, false);
+    context.fill();
+}
+
 function draw_enemy_hp(hp) {
     context.fillStyle = "rgba(250, 150, 150, 200)";
     context.fillRect(0, 0, 640 * hp / 500, 16);
@@ -49,6 +56,7 @@ document.body.onload = function() {
                     draw_player: (x, y) => draw_player(x, y),
                     draw_shot: (x, y) => draw_shot(x, y),
                     draw_enemy: (x, y) => draw_enemy(x, y),
+                    draw_bullet: (x, y) => draw_bullet(x, y),
                     draw_enemy_hp: (hp) => draw_enemy_hp(hp),
                     draw_gameclear_scene: () => draw_gameclear_scene(),
                     sin: (angle) => Math.sin(angle),
