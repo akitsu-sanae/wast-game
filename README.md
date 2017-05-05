@@ -21,9 +21,9 @@ Whole (905byte)
 |                              |
 |      Bullet * 80  (1360byte) |
 |                              |
-+--------------+---------------+- 1870
-| Keys (5byte) |
-+--------------+
++--------------+-------+-------+- 1870
+| Keys (5byte) | Scene |
++--------------+-------+
 ```
 
 Shot Data (17byte)
@@ -48,6 +48,14 @@ Keys (5byte)
 +------+------+------+------+------+
 | Left |  Up  | Right| Down |  Z   |
 +------+------+------+------+------+
+```
+
+Scene (1byte)
+```
+0 ... title scene
+1 ... game scene
+2 ... game clear scene
+3 ... gane over scene
 ```
 
 # Copyright

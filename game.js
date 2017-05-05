@@ -47,6 +47,12 @@ function draw_enemy_hp(hp) {
     context.fillRect(0, 0, 640 * hp / 100, 16);
 }
 
+function draw_title_scene() {
+    context.font = "48pt Arial";
+    context.fillStyle = "rgba(200, 200, 200, 200)";
+    context.fillText("press Z key to start!", 32, 320, 640);
+}
+
 function draw_gameclear_scene() {
     context.font = "48pt Arial";
     context.fillStyle = "rgba(200, 200, 200, 200)";
@@ -71,6 +77,7 @@ document.body.onload = function() {
                     draw_enemy: (x, y) => draw_enemy(x, y),
                     draw_bullet: (x, y) => draw_bullet(x, y),
                     draw_enemy_hp: (hp) => draw_enemy_hp(hp),
+                    draw_title_scene: () => draw_title_scene(),
                     draw_gameclear_scene: () => draw_gameclear_scene(),
                     draw_gameover_scene: () => draw_gameover_scene(),
                     sin: (angle) => Math.sin(angle),

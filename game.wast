@@ -5,6 +5,7 @@
     (func $draw_enemy (import "imports" "draw_enemy") (param f32 f32))
     (func $draw_bullet (import "imports" "draw_bullet") (param f32 f32))
     (func $draw_enemy_hp (import "imports" "draw_enemy_hp") (param i32))
+    (func $draw_title_scene (import "imports" "draw_title_scene"))
     (func $draw_gameclear_scene (import "imports" "draw_gameclear_scene"))
     (func $draw_gameover_scene (import "imports" "draw_gameover_scene"))
     (func $console (import "imports" "console") (param i32))
@@ -33,15 +34,123 @@
     (global $pi f32 (f32.const 3.141592))
 
     (func $update (export "update")
+        (local $scene i32)
+        (set_local $scene (i32.load8_u (i32.const 1875)))
+
+        (if (i32.eq (get_local $scene) (i32.const 0))
+            (then
+                (call $update_titlescene)
+                (return)))
+
+        (if (i32.eq (get_local $scene) (i32.const 1))
+            (then
+                (call $update_gamescene)
+                (return)))
+
+        (if (i32.eq (get_local $scene) (i32.const 2))
+            (then
+                (call $update_gameclear_scene)
+                (return)))
+
+        (if (i32.eq (get_local $scene) (i32.const 3))
+            (then
+                (call $update_gameover_scene)
+                (return)))
+    )
+
+    (func $init
+        (local $shot_i i32)
+        (local $bullet_i i32)
+        (local $data_addr i32)
+
+        (set_global $player_x (f32.const 320))
+        (set_global $player_y (f32.const 320))
+        (set_global $player_hp (i32.const 5))
+
+        (set_global $shot_index (i32.const 0))
+        (set_global $bullet_index (i32.const 0))
+
+        (set_global $enemy_x (f32.const 320))
+        (set_global $enemy_y (f32.const 120))
+        (set_global $enemy_counter (f32.const 0))
+        (set_global $enemy_angle (f32.const 0))
+        (set_global $enemy_angle_speed (f32.const 0))
+        (set_global $enemy_angle_speed_speed (f32.const 0.001))
+
+        (set_global $enemy_hp (i32.const 100))
+
+        ;; init shots
+        (set_local $shot_i (i32.const 0))
+        (block $shot_update_break
+            (loop $shot_update
+                (br_if $shot_update_break (i32.eq (get_local $shot_i) (i32.const 30)))
+
+                ;; data_addr = 17 * shot_i
+                (set_local $data_addr
+                    (i32.mul
+                        (i32.const 17)
+                        (get_local $shot_i)))
+
+                ;; shot_i += 1
+                (set_local $shot_i (i32.add (get_local $shot_i) (i32.const 1)))
+
+                (i32.store8 (get_local $data_addr) (i32.const 0))
+                (br $shot_update)))
+
+        ;; init bullets
+        (set_local $bullet_i (i32.const 0))
+        (block $bullet_update_break
+            (loop $bullet_update
+                (br_if $bullet_update_break (i32.eq (get_local $bullet_i) (i32.const 80)))
+
+                ;; data_addr = 510 + 17 * bullet_i
+                (set_local $data_addr
+                    (i32.add
+                        (i32.const 510)
+                        (i32.mul
+                            (i32.const 17)
+                            (get_local $bullet_i))))
+
+                ;; bullet_i += 1
+                (set_local $bullet_i (i32.add (get_local $bullet_i) (i32.const 1)))
+
+                (i32.store8 (get_local $data_addr) (i32.const 0))
+                (br $bullet_update)))
+
+    )
+
+    (func $update_titlescene
+        (if (i32.load8_u (i32.const 1874))
+            (then
+                (call $init)
+                (i32.store8 (i32.const 1875) (i32.const 1))))
+        (call $draw_title_scene)
+    )
+
+    (func $update_gameclear_scene
+        (if (i32.load8_u (i32.const 1874))
+            (then
+                (i32.store8 (i32.const 1875) (i32.const 0))))
+        (call $draw_gameclear_scene)
+    )
+
+    (func $update_gameover_scene
+        (if (i32.load8_u (i32.const 1874))
+            (then
+                (i32.store8 (i32.const 1875) (i32.const 0))))
+        (call $draw_gameover_scene)
+    )
+
+    (func $update_gamescene
 
         (if (i32.le_s (get_global $enemy_hp) (i32.const 0))
             (then
-                (call $draw_gameclear_scene)
+                (i32.store8 (i32.const 1875) (i32.const 2)) ;; game clear
                 (return)))
 
         (if (i32.le_s (get_global $player_hp) (i32.const -1))
             (then
-                (call $draw_gameover_scene)
+                (i32.store8 (i32.const 1875) (i32.const 3)) ;; game over
                 (return)))
 
         (call $update_player)
