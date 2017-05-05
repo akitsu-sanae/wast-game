@@ -51,6 +51,10 @@ function draw_title_scene() {
     context.font = "48pt Arial";
     context.fillStyle = "rgba(200, 200, 200, 200)";
     context.fillText("press Z key to start!", 32, 320, 640);
+    context.font = "15pt Arial";
+    context.fillText("[How to play]", 240, 480, 640);
+    context.fillText("Move: Cursor Key", 240, 480+48, 640);
+    context.fillText("Shot: Z key", 240, 480+48+32, 640);
 }
 
 function draw_gameclear_scene() {
