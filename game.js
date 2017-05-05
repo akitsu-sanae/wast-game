@@ -35,8 +35,12 @@ function draw_enemy(x, y) {
     context.fill();
 }
 
-function draw_bullet(x, y) {
-    context.fillStyle = "rgba(200, 200, 120, 200)";
+function draw_bullet(mode, x, y) {
+    if (mode === 1)
+        context.fillStyle = "rgba(200, 200, 120, 200)";
+    else if (mode === 2)
+        context.fillStyle = "rgba(200, 120, 120, 200)";
+
     context.beginPath();
     context.arc(x, y, 10.0, 0, Math.PI * 2.0, false);
     context.fill();
@@ -79,7 +83,7 @@ document.body.onload = function() {
                     draw_player_hp: (hp) => draw_player_hp(hp),
                     draw_shot: (x, y) => draw_shot(x, y),
                     draw_enemy: (x, y) => draw_enemy(x, y),
-                    draw_bullet: (x, y) => draw_bullet(x, y),
+                    draw_bullet: (mode, x, y) => draw_bullet(mode, x, y),
                     draw_enemy_hp: (hp) => draw_enemy_hp(hp),
                     draw_title_scene: () => draw_title_scene(),
                     draw_gameclear_scene: () => draw_gameclear_scene(),
@@ -101,29 +105,30 @@ document.body.onload = function() {
             ram = new Uint8Array(instance.exports.ram.buffer);
 
             /*
-             * ram[1870 + 0] ... left key
-             * ram[1870 + 1] ... up key
-             * ram[1870 + 2] ... right key
-             * ram[1870 + 3] ... down key
-             * ram[1870 + 4] ... z key
+             * ram[3910 + 0] ... left key
+             * ram[3910 + 1] ... up key
+             * ram[3910 + 2] ... right key
+             * ram[3910 + 3] ... down key
+             * ram[3910 + 4] ... z key (push)
+             * ram[3910 + 5] ... z key (hold)
              */
             document.onkeydown = e => {
                 switch (e.keyCode) {
                 case 37: // left
-                    ram[1870 + 0] = 1;
+                    ram[3910 + 0] = 1;
                     break;
                 case 38: // up
-                    ram[1870 + 1] = 1;
+                    ram[3910 + 1] = 1;
                     break;
                 case 39: // right
-                    ram[1870 + 2] = 1;
+                    ram[3910 + 2] = 1;
                     break;
                 case 40: // down
-                    ram[1870 + 3] = 1;
+                    ram[3910 + 3] = 1;
                     break;
                 case 90: // z
-                    ram[1870 + 4] = 1;
-                    ram[1870 + 5] = 1;
+                    ram[3910 + 4] = 1;
+                    ram[3910 + 5] = 1;
                     break;
                 }
             };
@@ -131,20 +136,20 @@ document.body.onload = function() {
             document.onkeyup = e => {
                 switch (e.keyCode) {
                 case 37: // left
-                    ram[1870] = 0;
+                    ram[3910] = 0;
                     break;
                 case 38: // up
-                    ram[1870 + 1] = 0;
+                    ram[3910 + 1] = 0;
                     break;
                 case 39: // right
-                    ram[1870 + 2] = 0;
+                    ram[3910 + 2] = 0;
                     break;
                 case 40: // down
-                    ram[1870 + 3] = 0;
+                    ram[3910 + 3] = 0;
                     break;
                 case 90: // z
-                    ram[1870 + 4] = 0;
-                    ram[1870 + 5] = 0;
+                    ram[3910 + 4] = 0;
+                    ram[3910 + 5] = 0;
                     break;
                 }
             };
@@ -155,7 +160,7 @@ document.body.onload = function() {
 function update(instance) {
     context.clearRect(0, 0, 640, 640);
     instance.exports.update();
-    ram[1874] = 0; // z key
+    ram[3914] = 0; // z key
     requestAnimationFrame(() => update(instance));
 }
 
