@@ -13,7 +13,7 @@ then, open `index.html`
 
 # Memory
 
-Whole (905byte)
+Whole (1876byte)
 ```
 +------------------------------+- 0
 |       Shot  * 30  (510byte)  |
