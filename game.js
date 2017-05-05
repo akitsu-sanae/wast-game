@@ -123,6 +123,7 @@ document.body.onload = function() {
                     break;
                 case 90: // z
                     ram[1870 + 4] = 1;
+                    ram[1870 + 5] = 1;
                     break;
                 }
             };
@@ -143,6 +144,7 @@ document.body.onload = function() {
                     break;
                 case 90: // z
                     ram[1870 + 4] = 0;
+                    ram[1870 + 5] = 0;
                     break;
                 }
             };

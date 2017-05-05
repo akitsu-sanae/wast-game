@@ -35,7 +35,7 @@
 
     (func $update (export "update")
         (local $scene i32)
-        (set_local $scene (i32.load8_u (i32.const 1875)))
+        (set_local $scene (i32.load8_u (i32.const 1876)))
 
         (if (i32.eq (get_local $scene) (i32.const 0))
             (then
@@ -123,21 +123,21 @@
         (if (i32.load8_u (i32.const 1874))
             (then
                 (call $init)
-                (i32.store8 (i32.const 1875) (i32.const 1))))
+                (i32.store8 (i32.const 1876) (i32.const 1))))
         (call $draw_title_scene)
     )
 
     (func $update_gameclear_scene
         (if (i32.load8_u (i32.const 1874))
             (then
-                (i32.store8 (i32.const 1875) (i32.const 0))))
+                (i32.store8 (i32.const 1876) (i32.const 0))))
         (call $draw_gameclear_scene)
     )
 
     (func $update_gameover_scene
         (if (i32.load8_u (i32.const 1874))
             (then
-                (i32.store8 (i32.const 1875) (i32.const 0))))
+                (i32.store8 (i32.const 1876) (i32.const 0))))
         (call $draw_gameover_scene)
     )
 
@@ -145,12 +145,12 @@
 
         (if (i32.le_s (get_global $enemy_hp) (i32.const 0))
             (then
-                (i32.store8 (i32.const 1875) (i32.const 2)) ;; game clear
+                (i32.store8 (i32.const 1876) (i32.const 2)) ;; game clear
                 (return)))
 
         (if (i32.le_s (get_global $player_hp) (i32.const -1))
             (then
-                (i32.store8 (i32.const 1875) (i32.const 3)) ;; game over
+                (i32.store8 (i32.const 1876) (i32.const 3)) ;; game over
                 (return)))
 
         (call $update_player)
@@ -267,7 +267,11 @@
 
                 (br $update)))
 
-        (if (i32.load8_u (i32.const 1874)) ;; z key
+        (if (i32.and
+                (i32.load8_u (i32.const 1875)) ;; z key
+                (i32.eq
+                    (i32.rem_s (i32.trunc_u/f32 (get_global $enemy_counter)) (i32.const 15))
+                    (i32.const 0)))
             (then
                 (call $fire_shot (f32.const -5.0) (f32.const -5.0))
                 (call $fire_shot (f32.const 0) (f32.const -5.5))
