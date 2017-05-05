@@ -24,7 +24,7 @@
     (global $enemy_y (mut f32) (f32.const 120))
     (global $enemy_counter (mut f32) (f32.const 0))
 
-    (global $enemy_hp (mut i32) (i32.const 500))
+    (global $enemy_hp (mut i32) (i32.const 100))
 
     (global $pi f32 (f32.const 3.141592))
 

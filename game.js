@@ -44,7 +44,7 @@ function draw_bullet(x, y) {
 
 function draw_enemy_hp(hp) {
     context.fillStyle = "rgba(250, 150, 150, 200)";
-    context.fillRect(0, 0, 640 * hp / 500, 16);
+    context.fillRect(0, 0, 640 * hp / 100, 16);
 }
 
 function draw_gameclear_scene() {
