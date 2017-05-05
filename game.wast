@@ -24,6 +24,9 @@
     (global $enemy_x (mut f32) (f32.const 320))
     (global $enemy_y (mut f32) (f32.const 120))
     (global $enemy_counter (mut f32) (f32.const 0))
+    (global $enemy_angle (mut f32) (f32.const 0))
+    (global $enemy_angle_speed (mut f32) (f32.const 0))
+    (global $enemy_angle_speed_speed (mut f32) (f32.const 0.001))
 
     (global $enemy_hp (mut i32) (i32.const 100))
 
@@ -277,7 +280,20 @@
 
     (func $update_enemy
         (local $angle f32)
-        (set_global $enemy_counter (f32.add (get_global $enemy_counter) (f32.const 1)))
+
+        (set_global $enemy_angle_speed (f32.add (get_global $enemy_angle_speed) (get_global $enemy_angle_speed_speed)))
+        (set_global $enemy_angle (f32.add (get_global $enemy_angle) (get_global $enemy_angle_speed)))
+
+        (if (f32.lt (get_global $enemy_angle_speed) (f32.div (get_global $pi) (f32.const -12)))
+            (then
+                (set_global $enemy_angle_speed_speed (f32.const 0.001))))
+
+        (if (f32.gt (get_global $enemy_angle_speed) (f32.div (get_global $pi) (f32.const 12)))
+            (then
+                (set_global $enemy_angle_speed_speed (f32.const -0.001))))
+
+        ;; enemy_counter += 1
+        (set_global $enemy_counter (f32.add(get_global $enemy_counter) (f32.const 1)))
 
         ;; if enemy_counter < 120 then enemy_counter -= 120
         (if (f32.gt (get_global $enemy_counter) (f32.const 120))
@@ -294,27 +310,42 @@
                         (get_global $enemy_counter)))
                 (f32.const 120)))
 
-        ;; enemy_x = 320 + 80 * cos(angle)
+        ;; enemy_x = 320 + 32 * cos(angle)
         (set_global $enemy_x
             (f32.add
                 (f32.const 320)
                 (f32.mul
-                    (f32.const 80)
+                    (f32.const 32)
                     (call $cos (get_local $angle)))))
 
-        ;; enemy_y = 120 + 80 * sin(angle)
+        ;; enemy_y = 120 + 32 * sin(angle)
         (set_global $enemy_y
             (f32.add
                 (f32.const 120)
                 (f32.mul
-                    (f32.const 80)
+                    (f32.const 32)
                     (call $sin (get_local $angle)))))
 
-        ;; if (enemy_counter%5) == 0 then fire_bullet(3.0*cos(angle), 3.0)
+        ;; if (enemy_counter%5) == 0 then fire_bullet(3.0*cos(enemy_angle), 3.0)
         (if (i32.eq (i32.rem_u (i32.trunc_u/f32 (get_global $enemy_counter)) (i32.const 5)) (i32.const 0))
             (then
-                (call $fire_bullet (f32.mul (f32.const 3) (call $cos (get_local $angle))) (f32.const 3))
-                (call $fire_bullet (f32.neg (f32.mul (f32.const 3) (call $cos (get_local $angle)))) (f32.const 3))))
+                (set_local $angle (get_global $enemy_angle))
+                (call $fire_bullet
+                    (f32.mul (f32.const 5) (call $sin (get_local $angle)))
+                    (f32.mul (f32.const 5) (call $cos (get_local $angle))))
+                (set_local $angle (f32.add (get_local $angle) (f32.div (get_global $pi) (f32.const 2))))
+                (call $fire_bullet
+                    (f32.mul (f32.const 5) (call $sin (get_local $angle)))
+                    (f32.mul (f32.const 5) (call $cos (get_local $angle))))
+                (set_local $angle (f32.add (get_local $angle) (f32.div (get_global $pi) (f32.const 2))))
+                (call $fire_bullet
+                    (f32.mul (f32.const 5) (call $sin (get_local $angle)))
+                    (f32.mul (f32.const 5) (call $cos (get_local $angle))))
+                (set_local $angle (f32.add (get_local $angle) (f32.div (get_global $pi) (f32.const 2))))
+                (call $fire_bullet
+                    (f32.mul (f32.const 5) (call $sin (get_local $angle)))
+                    (f32.mul (f32.const 5) (call $cos (get_local $angle))))))
+
 
         (if (i32.eq (i32.rem_u (i32.trunc_u/f32 (get_global $enemy_counter)) (i32.const 30)) (i32.const 0))
             (then
