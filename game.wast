@@ -59,11 +59,49 @@
                 (return)))
     )
 
-    (func $init
-        (local $shot_i i32)
-        (local $bullet_i i32)
+    (func $clear_shots
         (local $data_addr i32)
+        (local $shot_i i32)
+        (set_local $shot_i (i32.const 0))
+        (block $update_break
+            (loop $update
+                (br_if $update_break (i32.eq (get_local $shot_i) (i32.const 30)))
 
+                ;; data_addr = 17 * shot_i
+                (set_local $data_addr
+                    (i32.mul
+                        (i32.const 17)
+                        (get_local $shot_i)))
+
+                ;; shot_i += 1
+                (set_local $shot_i (i32.add (get_local $shot_i) (i32.const 1)))
+
+                (i32.store8 (get_local $data_addr) (i32.const 0))
+                (br $update))))
+
+    (func $clear_bullets
+        (local $data_addr i32)
+        (local $bullet_i i32)
+        (set_local $bullet_i (i32.const 0))
+        (block $update_break
+            (loop $update
+                (br_if $update_break (i32.eq (get_local $bullet_i) (i32.const 200)))
+
+                ;; data_addr = 510 + 17 * bullet_i
+                (set_local $data_addr
+                    (i32.add
+                        (i32.const 510)
+                        (i32.mul
+                            (i32.const 17)
+                            (get_local $bullet_i))))
+
+                ;; bullet_i += 1
+                (set_local $bullet_i (i32.add (get_local $bullet_i) (i32.const 1)))
+
+                (i32.store8 (get_local $data_addr) (i32.const 0))
+                (br $update))))
+
+    (func $init
         (set_global $player_x (f32.const 320))
         (set_global $player_y (f32.const 320))
         (set_global $player_hp (i32.const 5))
@@ -80,44 +118,8 @@
 
         (set_global $enemy_hp (i32.const 100))
 
-        ;; init shots
-        (set_local $shot_i (i32.const 0))
-        (block $shot_update_break
-            (loop $shot_update
-                (br_if $shot_update_break (i32.eq (get_local $shot_i) (i32.const 30)))
-
-                ;; data_addr = 17 * shot_i
-                (set_local $data_addr
-                    (i32.mul
-                        (i32.const 17)
-                        (get_local $shot_i)))
-
-                ;; shot_i += 1
-                (set_local $shot_i (i32.add (get_local $shot_i) (i32.const 1)))
-
-                (i32.store8 (get_local $data_addr) (i32.const 0))
-                (br $shot_update)))
-
-        ;; init bullets
-        (set_local $bullet_i (i32.const 0))
-        (block $bullet_update_break
-            (loop $bullet_update
-                (br_if $bullet_update_break (i32.eq (get_local $bullet_i) (i32.const 200)))
-
-                ;; data_addr = 510 + 17 * bullet_i
-                (set_local $data_addr
-                    (i32.add
-                        (i32.const 510)
-                        (i32.mul
-                            (i32.const 17)
-                            (get_local $bullet_i))))
-
-                ;; bullet_i += 1
-                (set_local $bullet_i (i32.add (get_local $bullet_i) (i32.const 1)))
-
-                (i32.store8 (get_local $data_addr) (i32.const 0))
-                (br $bullet_update)))
-
+        (call $clear_shots)
+        (call $clear_bullets)
     )
 
     (func $update_titlescene
@@ -350,6 +352,8 @@
                     (then
                         (i32.store8 (get_local $data_addr) (i32.const 0))
                         (set_global $player_hp (i32.sub (get_global $player_hp) (i32.const 1)))
+                        (call $clear_shots)
+                        (call $clear_bullets)
                         (br $update)))
 
                 ;; if x > 640 then bullet_is_alive = false
