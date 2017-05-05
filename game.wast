@@ -11,6 +11,7 @@
     (func $console_f (import "imports" "console") (param f32))
     (func $sin (import "imports" "sin") (param f32) (result f32))
     (func $cos (import "imports" "cos") (param f32) (result f32))
+    (func $atan2 (import "imports" "atan2") (param f32 f32) (result f32))
     (memory (export "ram") 1)
 
     (global $player_x (mut f32) (f32.const 320))
@@ -48,19 +49,19 @@
 
     (func $update_player
 
-        (if (i32.load8_u (i32.const 1190)) ;; left key pressed
+        (if (i32.load8_u (i32.const 1870)) ;; left key pressed
             (then
                (set_global $player_x (f32.sub (get_global $player_x) (f32.const 5)))))
 
-        (if (i32.load8_u (i32.const 1192)) ;; right key pressed
+        (if (i32.load8_u (i32.const 1872)) ;; right key pressed
             (then
                (set_global $player_x (f32.add (get_global $player_x) (f32.const 5)))))
 
-        (if (i32.load8_u (i32.const 1191)) ;; up key pressed
+        (if (i32.load8_u (i32.const 1871)) ;; up key pressed
             (then
                (set_global $player_y (f32.sub (get_global $player_y) (f32.const 5)))))
 
-        (if (i32.load8_u (i32.const 1193)) ;; down key pressed
+        (if (i32.load8_u (i32.const 1873)) ;; down key pressed
             (then
                (set_global $player_y (f32.add (get_global $player_y) (f32.const 5)))))
 
@@ -154,7 +155,7 @@
 
                 (br $update)))
 
-        (if (i32.load8_u (i32.const 1194)) ;; z key
+        (if (i32.load8_u (i32.const 1874)) ;; z key
             (then
                 (call $fire_shot (f32.const -5.0) (f32.const -5.0))
                 (call $fire_shot (f32.const 0) (f32.const -5.5))
@@ -194,7 +195,7 @@
         (set_local $bullet_i (i32.const 0))
         (block $update_break
             (loop $update
-                (br_if $update_break (i32.eq (get_local $bullet_i) (i32.const 40)))
+                (br_if $update_break (i32.eq (get_local $bullet_i) (i32.const 80)))
 
                 ;; data_addr = 510 + 17 * bullet_i
                 (set_local $data_addr
@@ -241,10 +242,6 @@
 
                 (f32.store (i32.add (get_local $data_addr) (i32.const 1)) (get_local $x))
                 (f32.store (i32.add (get_local $data_addr) (i32.const 5)) (get_local $y))
-                (f32.store (i32.add (get_local $data_addr) (i32.const 9))
-                    (f32.mul
-                        (f32.load (i32.add (get_local $data_addr) (i32.const 9)))
-                        (f32.const 0.9)))
 
                 (call $draw_bullet
                     (f32.load (i32.add (get_local $data_addr) (i32.const 1)))
@@ -269,13 +266,13 @@
         (f32.store (i32.add (get_local $new_bullet_addr) (i32.const 9)) (get_local $dx))
         (f32.store (i32.add (get_local $new_bullet_addr) (i32.const 13)) (get_local $dy))
 
-        ;; bullet_index = (bullet_index+1) % 40
+        ;; bullet_index = (bullet_index+1) % 80
         (set_global $bullet_index
             (i32.rem_s
                 (i32.add
                     (get_global $bullet_index)
                     (i32.const 1))
-                (i32.const 40)))
+                (i32.const 80)))
     )
 
     (func $update_enemy
@@ -316,13 +313,22 @@
         ;; if (enemy_counter%5) == 0 then fire_bullet(3.0*cos(angle), 3.0)
         (if (i32.eq (i32.rem_u (i32.trunc_u/f32 (get_global $enemy_counter)) (i32.const 5)) (i32.const 0))
             (then
-                (call $fire_bullet (f32.mul (f32.const 3) (call $cos (get_local $angle))) (f32.const 3))))
+                (call $fire_bullet (f32.mul (f32.const 3) (call $cos (get_local $angle))) (f32.const 3))
+                (call $fire_bullet (f32.neg (f32.mul (f32.const 3) (call $cos (get_local $angle)))) (f32.const 3))))
+
+        (if (i32.eq (i32.rem_u (i32.trunc_u/f32 (get_global $enemy_counter)) (i32.const 30)) (i32.const 0))
+            (then
+                (set_local $angle (call $atan2
+                    (f32.sub (get_global $player_y) (get_global $enemy_y))
+                    (f32.sub (get_global $player_x) (get_global $enemy_x))))
+                (call $fire_bullet
+                    (f32.mul (f32.const 5) (call $cos (get_local $angle)))
+                    (f32.mul (f32.const 5) (call $sin (get_local $angle))))))
 
         ;; draw
         (call $draw_enemy (get_global $enemy_x) (get_global $enemy_y))
         (call $draw_enemy_hp (get_global $enemy_hp))
     )
-
 )
 
 
