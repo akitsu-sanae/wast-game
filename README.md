@@ -1,7 +1,9 @@
 # wast-game
 
-wast-game is a game written in WebAssembly text format (wast).
-inspired by https://github.com/abagames/wasm-game-by-hand
+wast-game is a game written in WebAssembly text format (wast).  
+inspired by https://github.com/abagames/wasm-game-by-hand  
+
+[Demo Page](https://akitsu-sanae.github.io/works/wast-game/index.html)
 
 # How to build
 
